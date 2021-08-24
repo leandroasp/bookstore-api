@@ -8,7 +8,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import me.urbanize.bookstore.domain.Categoria;
-import me.urbanize.bookstore.dtos.CategoriaDTO;
 import me.urbanize.bookstore.repositories.CategoriaRepository;
 import me.urbanize.bookstore.service.exceptions.ObjectNotFoundException;
 
@@ -33,11 +32,10 @@ public class CategoriaService {
 		return repository.save(obj);
 	}
 
-	public Categoria update(Integer id, CategoriaDTO objDto) {
-		Categoria obj = findById(id);
-		obj.setNome(objDto.getNome());
-		obj.setDescricao(objDto.getDescricao());
-		return repository.save(obj);
+	public Categoria update(Integer id, Categoria obj) {
+		Categoria newObj = findById(id);
+		updateData(newObj, obj);
+		return repository.save(newObj);
 	}
 
 	public void delete(Integer id) {
@@ -48,5 +46,10 @@ public class CategoriaService {
 			throw new me.urbanize.bookstore.service.exceptions.DataIntegrityViolationException(
 					"Categoria não pode ser deletada! Possui livros associados");
 		}
+	}
+
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setNome(obj.getNome());
+		newObj.setDescricao(obj.getDescricao());
 	}
 }
